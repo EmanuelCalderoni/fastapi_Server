@@ -35,7 +35,7 @@ def verify_token(token:str, credential_exception):
 
 def get_current_user (token:str=Depends(oauth2_squeme)):
     credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                         detail='could +++not validate credentials',
+                                         detail='could not validate credentials',
                                          headers={'WWW-Authenticate':'Bearer'}
                                          )
     token_data = verify_token(token, credential_exception) 
