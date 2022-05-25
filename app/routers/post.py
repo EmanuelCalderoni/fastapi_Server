@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
-from fastapi import  HTTPException, status , Response, APIRouter, Depends, UploadFile
+from fastapi import  HTTPException, status , Response, APIRouter, Depends, UploadFile, File
 from .. import squema, oauth2 # mi modelo pydentic para validar request
 from ..database import db, bucket
 from firebase_admin import firestore
@@ -12,7 +12,7 @@ router = APIRouter(
 print("estamos en router. post")
 
 @router.post("/uploadfile")
-async def create_upload_file(file: UploadFile):
+async def create_upload_file(file: UploadFile = File(...)):
     # hacemos algo con el archivo recibido...
     myFile = file.file
     myFile.seek(0,2)

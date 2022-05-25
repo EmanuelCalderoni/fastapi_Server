@@ -9,6 +9,7 @@ Created on Sun Apr 17 21:12:37 2022
 from pydantic import BaseModel,EmailStr
 import datetime
 from typing import Optional
+from fastapi import UploadFile 
 
 class Post(BaseModel):
     title :str 
@@ -64,6 +65,9 @@ class Token(BaseModel):
     
 class Token_data(BaseModel):
     id: Optional [str] = None
+    
+class fileCreate(BaseModel):
+    file:UploadFile
     
 
 
