@@ -145,6 +145,27 @@ async def root():
                     * seteamos SECRETKEY,ALGORITHM, ACCESS_EXPIRE en config.py, el cual accede a .env
                     * .env debe estar afuera de la carpeta app para que la lea pydantic
                     * editamos el archivo .gitignore
+                    
+                Notas 18/05: deploy to heroku
+                    * git add --all
+                    * git commit -m "message"
+                    * git push origin main
+                    * git push heroku main
+                    * heroku logs -t:  muestra la consola del server 
+                    * requirement.txt: copie el txt del tutorial y agregue firebase-admin
+                    * credentials firestore: el json esta en el directoria raiz del proyecto, modifique el path
+                    * fetch('https://fastapi-emanuelcalderoni.herokuapp.com').then(res=>res.json()).then(console.log)
+                    * no se setearon las variables de environment en heroku porque se subieron todos los files a github
+                    
+                Notas 21/05: Google Appscript & Firestore Storage 
+                    * Se implemento el manejo de archivos en el proyecto FILEAPP
+                
+                Notas 22/05: Upload Files a la API
+                    * @router.post("/uploadfile"): el objeto de tipo upload tiene 
+                        el atributo file que es un temporal file-like python object 
+                    * con ese file se creo un blob de storage 
+                    * se devuelve al cliente metadatos y URL(signed) de desacarga
+                    * notese como importamos la variable bucket y db del modulo database
                         
 """
 

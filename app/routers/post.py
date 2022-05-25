@@ -1,14 +1,38 @@
 # -*- coding: utf-8 -*-
+import datetime
 
-from fastapi import  HTTPException, status , Response, APIRouter, Depends
+from fastapi import  HTTPException, status , Response, APIRouter, Depends, UploadFile
 from .. import squema, oauth2 # mi modelo pydentic para validar request
-from ..database import db
+from ..database import db, bucket
 from firebase_admin import firestore
 
 
 router = APIRouter(
     tags=['Post'])
 print("estamos en router. post")
+
+@router.post("/uploadfile")
+async def create_upload_file(file: UploadFile):
+    # hacemos algo con el archivo recibido...
+    myFile = file.file
+    myFile.seek(0,2)
+    size = myFile.tell()
+    myFile.seek(0)
+    blob = bucket.blob("myFiles/"+file.filename)
+    blob.upload_from_file(myFile)
+    url = blob.generate_signed_url(
+        version="v4",
+        # This URL is valid for 15 minutes
+        expiration=datetime.timedelta(minutes=15),
+        # Allow GET requests using this URL.
+        method="GET")
+    print (f'\nobjeto almacenado con nombre: {blob.name}\n')
+    return {"filename: ": file.filename,
+            "content_type: ":file.content_type,
+            "size: ":size,
+            "URL: ":url}
+
+
 @router.get("/posts")
 async def get_posts(get_current_user:str= Depends(oauth2.get_current_user)):
     posts_ref = db.collection('posts')
