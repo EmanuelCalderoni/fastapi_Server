@@ -6,6 +6,8 @@ Created on Thu Mar 31 19:54:10 2022
 @author: emanuelcalderoni 
 """
 
+
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 #from random import randrange
@@ -13,7 +15,9 @@ from fastapi.middleware.cors import CORSMiddleware
 #from firebase_admin import credentials, firestore
 #from . import squema, utils # mi modelo pydentic para validar request
 from .routers import post,user,auth
-
+import os
+from selenium import webdriver
+from bs4 import BeautifulSoup
 
 print("estamos en main!")  
 
@@ -34,7 +38,20 @@ app.include_router(auth.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Hola Mundo !"}
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.getenv("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+        #export CHROMEDRIVER_PATH="/users/......./chromedriver" y printenv
+    driver.get('https://www.apple.com/la/')
+    page_source = driver.page_source
+    soup = BeautifulSoup(page_source,'html.parser')
+    texto = soup.find('li',id='footnote-1').get_text()
+    driver.close()
+
+    return {"message": texto}
 
 
 
@@ -141,7 +158,7 @@ async def root():
                       
                 Notas 14/05: ENV variables
                     * seteamos una variable en el terminal: export SECRETKEY="myKey"
-                    * importamos su valor a python : import os; key = os.getev("SECRETKEY")
+                    * importamos su valor a python : import os; key = os.getenv("SECRETKEY")
                     * seteamos SECRETKEY,ALGORITHM, ACCESS_EXPIRE en config.py, el cual accede a .env
                     * .env debe estar afuera de la carpeta app para que la lea pydantic
                     * editamos el archivo .gitignore
