@@ -44,7 +44,7 @@ async def root():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.getenv("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
-        #export CHROMEDRIVER_PATH="/users/......./chromedriver" y printenv
+        #export CHROMEDRIVER_PATH="/users/......./chromedriver" y printenv.
     driver.get('https://www.apple.com/la/')
     page_source = driver.page_source
     soup = BeautifulSoup(page_source,'html.parser')
