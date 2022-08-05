@@ -44,15 +44,16 @@ async def root():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     driver = webdriver.Chrome(executable_path=os.getenv("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    #driver = webdriver.Chrome(executable_path='../WebScrap/chromedriver', chrome_options=chrome_options)
         #export CHROMEDRIVER_PATH="/users/......./chromedriver" y printenv.
+        #https://romik-kelesh.medium.com/how-to-deploy-a-python-web-scraper-with-selenium-on-heroku-1459cb3ac76c
     driver.get('https://www.apple.com/la/')
     page_source = driver.page_source
     soup = BeautifulSoup(page_source,'html.parser')
-    texto = soup.find('li',id='footnote-1').get_text()
+    texto = soup.find('h3',class_='subhead typography-hero-subhead').get_text()
     driver.close()
 
     return {"message": texto}
-
 
 
 
